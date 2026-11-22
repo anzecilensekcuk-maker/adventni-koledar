@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Adventni Koledar</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+    :root {
+      --pink-light: #fff0f5;
+      --pink: #ffb6c1;
+      --pink-mid: #ff8fab;
+      --pink-dark: #e75480;
+      --pink-deep: #c2185b;
+      --gold: #ffd700;
+      --soft-shadow: 0 8px 25px rgba(231, 84, 128, 0.18);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(160deg, #fff0f5 0%, #ffe4ec 45%, #ffd6e7 100%);
+      min-height: 100vh;
+      color: #5a2a3a;
+      overflow-x: hidden;
+    }
+
+    .snowflake {
+      position: fixed;
+      top: -20px;
+      color: rgba(255, 182, 193, 0.75);
+      font-size: 1.1rem;
+      animation: fall linear infinite;
+      z-index: 0;
+      pointer-events: none;
+      text-shadow: 0 0 6px rgba(255,255,255,0.9);
+    }
+
+    @keyframes fall {
+      to { transform: translateY(105vh) rotate(360deg); }
+    }
+
+    #landing {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .landing-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-radius: 28px;
+      padding: 2.2rem 1.8rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: var(--soft-shadow);
+      border: 2px solid rgba(255, 182, 193, 0.45);
+      text-align: center;
+      animation: fadeInUp 0.7s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .title {
+      font-family: 'Nunito', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--pink-deep);
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--pink-dark);
+      margin-bottom: 1.6rem;
+      font-weight: 600;
+    }
+
+    .rules {
+      text-align: left;
+      background: linear-gradient(135deg, #fff5f8, #ffeef4);
+      border-radius: 18px;
+      padding: 1.3rem 1.4rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255, 182, 193, 0.5);
+    }
+
+    .rules h3 {
+      color: var(--pink-deep);
+      margin-bottom: 0.75rem;
+      font-size: 1.15rem;
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .rules ol { padding-left: 1.25rem; }
+
+    .rules li {
+      margin-bottom: 0.75rem;
+      line-height: 1.45;
+      font-size: 0.95rem;
+    }
+
+    .wish {
+      font-size: 1rem;
+      color: var(--pink-dark);
+      margin-bottom: 1.6rem;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .countdown-box {
+      background: linear-gradient(135deg, var(--pink-mid), var(--pink-dark));
+      color: white;
+      border-radius: 18px;
+      padding: 1.1rem;
+      margin-bottom: 1.6rem;
+      box-shadow: 0 6px 20px rgba(231, 84, 128, 0.3);
+    }
+
+    .countdown-label {
+      font-size: 0.9rem;
+      opacity: 0.95;
+      margin-bottom: 0.35rem;
+    }
+
+    .countdown {
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-enter {
+      background: linear-gradient(135deg, var(--pink-mid), var(--pink-deep));
+      color: white;
+      border: none;
+      padding: 1rem 2.4rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(231, 84, 128, 0.35);
+      transition: all 0.25s ease;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .btn-enter:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 12px 30px rgba(231, 84, 128, 0.45);
+    }
+
+    #calendar-page {
+      display: none;
+      min-height: 100vh;
+      padding: 1.2rem 0.9rem 3rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .calendar-header {
+      text-align: center;
+      margin-bottom: 1.3rem;
+      padding-top: 0.5rem;
+    }
+
+    .calendar-header h1 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--pink-deep);
+      margin-bottom: 0.2rem;
+    }
+
+    .calendar-header p {
+      color: var(--pink-dark);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: white;
+      border: 2px solid var(--pink);
+      color: var(--pink-deep);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.15rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--soft-shadow);
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+
+    .back-btn:hover {
+      background: var(--pink-light);
+      transform: scale(1.08);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 4px;
+    }
+
+    @media (min-width: 520px) {
+      .grid {
+        grid-template-columns: repeat(6, 1fr);
+        max-width: 640px;
+      }
+    }
+
+    .door {
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      position: relative;
+      cursor: pointer;
+      perspective: 1000px;
+      transition: transform 0.25s ease;
+      min-height: 0;
+    }
+
+    .door:hover:not(.locked) {
+      transform: translateY(-3px);
+    }
+
+    .door-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.75s cubic-bezier(0.4, 0.2, 0.2, 1);
+    }
+
+    .door.opened .door-inner {
+      transform: rotateY(-180deg);
+    }
+
+    .door-front,
+    .door-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(231, 84, 128, 0.2);
+    }
+
+    .door-front {
+      background: linear-gradient(145deg, #ff9ebb, #ff6b9d);
+      color: white;
+      border: 3px solid rgba(255,255,255,0.45);
+    }
+
+    .door.locked .door-front {
+      background: linear-gradient(145deg, #d4a0b4, #b87a96);
+      cursor: not-allowed;
+    }
+
+    .door.locked:hover { transform: none; }
+
+    .door-number {
+      font-size: 1.7rem;
+      font-weight: 800;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      line-height: 1;
+    }
+
+    .door-status {
+      font-size: 0.65rem;
+      margin-top: 5px;
+      opacity: 0.95;
+      text-align: center;
+      padding: 0 5px;
+      line-height: 1.2;
+      font-weight: 600;
+    }
+
+    .door-back {
+      background: linear-gradient(145deg, #fff5f8, #ffe8f0);
+      transform: rotateY(180deg);
+      border: 3px solid var(--pink);
+      padding: 8px;
+      overflow-y: auto;
+    }
+
+    .challenge-text {
+      font-size: 0.72rem;
+      line-height: 1.3;
+      text-align: center;
+      color: #5a2a3a;
+      font-weight: 600;
+    }
+
+    .checkmark {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #4caf50;
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+      z-index: 5;
+    }
+
+    .door.completed .checkmark { display: flex; }
+
+    @keyframes popIn {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+
+    .sparkle {
+      position: fixed;
+      width: 7px;
+      height: 7px;
+      background: var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 50;
+      animation: sparkleOut 0.75s forwards;
+    }
+
+    @keyframes sparkleOut {
+      0% { transform: scale(1) translate(0,0); opacity: 1; }
+      100% { transform: scale(0) translate(var(--tx), var(--ty)); opacity: 0; }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(90, 42, 58, 0.55);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1.3rem;
+    }
+
+    .modal.show { display: flex; }
+
+    .modal-content {
+      background: white;
+      border-radius: 24px;
+      padding: 1.8rem 1.5rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.22);
+      border: 3px solid var(--pink);
+      animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.75); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-day {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--pink-deep);
+      margin-bottom: 0.7rem;
+    }
+
+    .modal-challenge {
+      font-size: 1.02rem;
+      line-height: 1.5;
+      color: #5a2a3a;
+      font-weight: 600;
+      margin-bottom: 1.4rem;
+    }
+
+    .modal-close {
+      background: linear-gradient(135deg, var(--pink-mid), var(--pink-deep));
+      color: white;
+      border: none;
+      padding: 0.75rem 1.9rem;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .modal-close:hover { transform: scale(1.04); }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-5px); }
+      40% { transform: translateX(5px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+  </style>
+</head>
+<body>
+  <div id="snowflakes"></div>
+
+  <div id="landing">
+    <div class="landing-card">
+      <div class="title">Adventni Koledar</div>
+      <div class="subtitle">za Zalo 💕</div>
+
+      <div class="rules">
+        <h3>Pravila</h3>
+        <ol>
+          <li>Vsak dan se ob <strong>9:00 zjutraj</strong> odklene nov izziv. Imaš čas do <strong>21:00 zvečer</strong>, da ga opraviš. Če zamudiš, se odštejejo točke.</li>
+          <li>Vsak dan, ko dobiš izziv, mi moraš poslati sliko oziroma to, kar izziv zahteva. Če tega ne dobim, točk ne dobiš oziroma se odštejejo.</li>
+          <li>Na koncu se točke seštejejo. Od tega je odvisno, kako lepo darilo dobiš za Božič 🎁</li>
+        </ol>
+      </div>
+
+      <div class="wish">
+        Želim ti veliko sreče in čudovitih trenutkov ob tem adventnem koledarju. 🩷
+      </div>
+
+      <div class="countdown-box">
+        <div class="countdown-label">Prvi izziv se odklene čez</div>
+        <div class="countdown" id="main-countdown">--d --h --m --s</div>
+      </div>
+
+      <button class="btn-enter" onclick="showCalendar()">Odpri koledar 🎄</button>
+    </div>
+  </div>
+
+  <div id="calendar-page">
+    <button class="back-btn" onclick="showLanding()">←</button>
+    <div class="calendar-header">
+      <h1>Adventni Koledar</h1>
+      <p>Klikni na odklenjen koledarček ✨</p>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <div class="modal-day" id="modal-day"></div>
+      <div class="modal-challenge" id="modal-challenge"></div>
+      <button class="modal-close" onclick="closeModal()">Zapri</button>
+    </div>
+  </div>
+
+  <script>
+    const challenges = {
+      1: "Dans mi posl eno stvar ko te je dans nasmejala (lahk je slika al pa screenshot).",
+      2: "Dans pejt na kratek sprehod (lahk je sam 10–15 min) in mi posl eno sliko necesa ko vidis po poti pa ti je vsec.",
+      3: "Dans me presenet z enim zanimivim fun factom glede danasnjega datuma (3.12.).",
+      4: "Zber eno pesem ko ti trenutno gre po glavi pa mi jo posl.",
+      5: "Dans pa pejt prvic neki pojest na bone (ce si prvic ze jedla na bone pejt useen neki pojest! - lazanjo ce jo majo!!).",
+      6: "Nared sliko necesa ko vidis zdle pa si mislis da bi mi bilo vsec.",
+      7: "Dans mi povej eno stvar ko te moti pr men.",
+      8: "Posl mi eno stvar ko si jo dans pojedla alpa popila pa jo ocen od 1 do 10.",
+      9: "Dans pejd po svoj najlubsi (roza) Red Bull in mi posl sliko ko ga mas v roki.",
+      10: "Bravo prezivela si 10 dni mojih glupih izzivov hahaha. Dans mas pa pavzo tk da se spocij.",
+      11: "Dans pejd na kavico (kavo z mleku) in mi posl sliko latte arta na kavi.",
+      12: "Dans zvecer pa pogledi en fajni film ko mislis da bo men usec pa ga bom pogledu nasledn dan pa ti povem kak je biu.",
+      13: "Dans pejt pozdravit Tadejo in preziv mal cajta z njo. Pol mi pa posl ka sta kej delale.",
+      14: "Dans se mal stiski s pliskotu (Jožico) in mi posl kako slikco.",
+      15: "Dans pa pejt mal pes po Mariboru in poisc avto ko ga hocis met v prihodnosti in mi posl sliko njega.",
+      16: "Dans mi povej eno stvar ko bi jo zelela da veva drug o drugim pa se ne veva. Js ti povem pol svojo.",
+      17: "Dans mi povej eno stvar ko si jo o men opazla pa mi se nisi povedala.",
+      18: "Dans pa pejt na sprehod in mi posl lepo slikco soncnega zahoda (bonus tocke ce si na sliki tut ti).",
+      19: "Dans mi pa posl slikco necesa ko ti velik pomen in mi obrazloz zakaj.",
+      20: "Dans pejt na kavico s Tadejo in mi posl eno skupno slikco (lahk tut sam vajni kavici).",
+      21: "Dans si vzem 5min za sebe brez telefona in vsega sam tvoje misli. Pol mi pa povej ka ti je slo po glavi.",
+      22: "Dans pejt vn na sprehod in poisc neki kar te spomne na mene (posl mi slikco pa obrazloz zka te spomne na mene).",
+      23: "Dans bos pa narisala neki in mi poslala js bom pa ocenu pol od 1 do 10.",
+      24: "Dans je pa zadnji dan. Nared kar hocis. Lahk mi sam napises kak ti je bil tt adventni koledar… Zelim ti vesel bozic in lepe praznike (pa ko se vidma dobis neki maliga)🎄🎅🫶🏻."
+    };
+
+    const YEAR = 2026;
+
+    function safeGet(key) {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+
+    function safeSet(key, value) {
+      try { localStorage.setItem(key, value); } catch (e) {}
+    }
+
+    function createSnowflakes() {
+      const container = document.getElementById('snowflakes');
+      const symbols = ['❄', '🎄', '✦', '♥', '🎁', '🌸', '✧', '⭐'];
+      for (let i = 0; i < 25; i++) {
+        const flake = document.createElement('div');
+        flake.className = 'snowflake';
+        flake.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        flake.style.left = Math.random() * 100 + 'vw';
+        flake.style.animationDuration = (7 + Math.random() * 9) + 's';
+        flake.style.animationDelay = (Math.random() * 7) + 's';
+        flake.style.fontSize = (0.75 + Math.random() * 1) + 'rem';
+        flake.style.opacity = 0.45 + Math.random() * 0.4;
+        container.appendChild(flake);
+      }
+    }
+
+    function getUnlockTime(day) {
+      return new Date(YEAR, 11, day, 9, 0, 0);
+    }
+
+    function getNow() { return new Date(); }
+
+    function isUnlocked(day) {
+      return getNow() >= getUnlockTime(day);
+    }
+
+    function isCompleted(day) {
+      const checkTime = new Date(YEAR, 11, day + 2, 9, 0, 0);
+      return getNow() >= checkTime;
+    }
+
+    function formatCountdown(ms) {
+      if (ms <= 0) return "00d 00h 00m 00s";
+      const totalSeconds = Math.floor(ms / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const mins = Math.floor((totalSeconds % 3600) / 60);
+      const secs = totalSeconds % 60;
+      return String(days).padStart(2,'0') + 'd ' + String(hours).padStart(2,'0') + 'h ' + String(mins).padStart(2,'0') + 'm ' + String(secs).padStart(2,'0') + 's';
+    }
+
+    function updateMainCountdown() {
+      const target = getUnlockTime(1);
+      const diff = target - getNow();
+      const el = document.getElementById('main-countdown');
+      if (diff <= 0) {
+        el.textContent = "Izziv je odklenjen! 🎉";
+      } else {
+        el.textContent = formatCountdown(diff);
+      }
+    }
+
+    function buildGrid() {
+      const grid = document.getElementById('grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      for (let day = 1; day <= 24; day++) {
+        const door = document.createElement('div');
+        door.className = 'door';
+        door.dataset.day = day;
+
+        const unlocked = isUnlocked(day);
+        const completed = isCompleted(day);
+
+        if (!unlocked) door.classList.add('locked');
+        if (completed) door.classList.add('completed');
+
+        const wasOpened = safeGet('advent_opened_' + day);
+        if (wasOpened && unlocked) {
+          door.classList.add('opened');
+        }
+
+        const unlockDate = getUnlockTime(day);
+        let statusText = '';
+        if (!unlocked) {
+          const diff = unlockDate - getNow();
+          if (diff < 86400000 * 3) {
+            statusText = '🔒 ' + formatCountdown(diff);
+          } else {
+            statusText = '🔒 ' + day + '. dec\nob 9:00';
+          }
+        } else {
+          statusText = completed ? '✓ Opravljeno' : '🔓 Odpri me';
+        }
+
+        door.innerHTML = '<div class="door-inner"><div class="door-front"><div class="door-number">' + day + '</div><div class="door-status">' + statusText + '</div></div><div class="door-back"><div class="challenge-text">' + challenges[day] + '</div></div></div><div class="checkmark">✓</div>';
+
+        door.addEventListener('click', function() {
+          handleDoorClick(day, door);
+        });
+
+        grid.appendChild(door);
+      }
+    }
+
+    function handleDoorClick(day, doorEl) {
+      if (!isUnlocked(day)) {
+        doorEl.style.animation = 'none';
+        doorEl.offsetHeight;
+        doorEl.style.animation = 'shake 0.4s ease';
+        return;
+      }
+
+      if (!doorEl.classList.contains('opened')) {
+        doorEl.classList.add('opened');
+        safeSet('advent_opened_' + day, '1');
+        createSparkles(doorEl);
+      }
+
+      setTimeout(function() {
+        document.getElementById('modal-day').textContent = 'Dan ' + day;
+        document.getElementById('modal-challenge').textContent = challenges[day];
+        document.getElementById('modal').classList.add('show');
+      }, 380);
+    }
+
+    function createSparkles(doorEl) {
+      const rect = doorEl.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 10; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        const angle = (i / 10) * Math.PI * 2;
+        const dist = 35 + Math.random() * 45;
+        sparkle.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+        sparkle.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+        sparkle.style.left = centerX + 'px';
+        sparkle.style.top = centerY + 'px';
+        sparkle.style.background = i % 2 === 0 ? '#ffd700' : '#ff8fab';
+        document.body.appendChild(sparkle);
+        setTimeout(function() { sparkle.remove(); }, 750);
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('show');
+    }
+
+    function showCalendar() {
+      document.getElementById('landing').style.display = 'none';
+      document.getElementById('calendar-page').style.display = 'block';
+      buildGrid();
+    }
+
+    function showLanding() {
+      document.getElementById('calendar-page').style.display = 'none';
+      document.getElementById('landing').style.display = 'flex';
+    }
+
+    createSnowflakes();
+    updateMainCountdown();
+    setInterval(updateMainCountdown, 1000);
+
+    setInterval(function() {
+      if (document.getElementById('calendar-page').style.display === 'block') {
+        buildGrid();
+      }
+    }, 1000); // update every second for live countdown
+
+    document.getElementById('modal').addEventListener('click', function(e) {
+      if (e.target.id === 'modal') closeModal();
+    });
+  </script>
+</body>
+</html>
