@@ -475,29 +475,29 @@
   <script>
     const challenges = {
       1: "Dans mi posl eno stvar ko te je dans nasmejala (lahk je slika al pa screenshot).",
-      2: "Dans pejt na kratek sprehod (lahk je sam 10–15 min) in mi posl eno sliko necesa ko vidis po poti pa ti je vsec.",
-      3: "Dans me presenet z enim zanimivim fun factom glede danasnjega datuma (3.12.).",
+      2: "Dans pejt na kratek sprehod (lahk je sam 10–15 min) in mi posl eno sliko ko vidis po poti pa ti je vsec.",
+      3: "Dans pa pejt prvic neki pojest na bone (ce si prvic ze jedla na bone pejt useen neki pojest! - lazanjo ce jo majo!!).",
       4: "Zber eno pesem ko ti trenutno gre po glavi pa mi jo posl.",
-      5: "Dans pa pejt prvic neki pojest na bone (ce si prvic ze jedla na bone pejt useen neki pojest! - lazanjo ce jo majo!!).",
+      5: "Dans me presenet z enim zanimivim fun factom glede danasnjega datuma (5.12.).",
       6: "Nared sliko necesa ko vidis zdle pa si mislis da bi mi bilo vsec.",
       7: "Dans mi povej eno stvar ko te moti pr men.",
       8: "Posl mi eno stvar ko si jo dans pojedla alpa popila pa jo ocen od 1 do 10.",
       9: "Dans pejd po svoj najlubsi (roza) Red Bull in mi posl sliko ko ga mas v roki.",
       10: "Bravo prezivela si 10 dni mojih glupih izzivov hahaha. Dans mas pa pavzo tk da se spocij.",
-      11: "Dans pejd na kavico (kavo z mleku) in mi posl sliko latte arta na kavi.",
-      12: "Dans zvecer pa pogledi en fajni film ko mislis da bo men usec pa ga bom pogledu nasledn dan pa ti povem kak je biu.",
-      13: "Dans pejt pozdravit Tadejo in preziv mal cajta z njo. Pol mi pa posl ka sta kej delale.",
+      11: "Dans mi povej eno stvar ko bi jo zelela da veva drug o drugim pa se ne veva. Js ti povem pol svojo.",
+      12: "Dans mi povej eno stvar ko si jo o men opazla pa mi se nisi povedala.",
+      13: "Dans zvecer pa pogledi en fajni film ko mislis da bo men usec pa ga bom pogledu nasledn dan pa ti povem kak je biu.",
       14: "Dans se mal stiski s pliskotu (Jožico) in mi posl kako slikco.",
       15: "Dans pa pejt mal pes po Mariboru in poisc avto ko ga hocis met v prihodnosti in mi posl sliko njega.",
-      16: "Dans mi povej eno stvar ko bi jo zelela da veva drug o drugim pa se ne veva. Js ti povem pol svojo.",
-      17: "Dans mi povej eno stvar ko si jo o men opazla pa mi se nisi povedala.",
+      16: "Dans pejd na kavico (kavo z mleku) in mi posl sliko latte arta na kavi.",
+      17: "Dans pejt pozdravit Tadejo in preziv mal cajta z njo. Pol mi pa posl ka sta kej delale.",
       18: "Dans pa pejt na sprehod in mi posl lepo slikco soncnega zahoda (bonus tocke ce si na sliki tut ti).",
       19: "Dans mi pa posl slikco necesa ko ti velik pomen in mi obrazloz zakaj.",
-      20: "Dans pejt na kavico s Tadejo in mi posl eno skupno slikco (lahk tut sam vajni kavici).",
-      21: "Dans si vzem 5min za sebe brez telefona in vsega sam tvoje misli. Pol mi pa povej ka ti je slo po glavi.",
+      20: "Dans si vzem 5min za sebe brez telefona in vsega sam tvoje misli. Pol mi pa povej ka ti je slo po glavi.",
+      21: "Dans pejt na kavico s Tadejo in mi posl eno skupno slikco (lahk tut sam vajni kavici).",
       22: "Dans pejt vn na sprehod in poisc neki kar te spomne na mene (posl mi slikco pa obrazloz zka te spomne na mene).",
       23: "Dans bos pa narisala neki in mi poslala js bom pa ocenu pol od 1 do 10.",
-      24: "Dans je pa zadnji dan. Nared kar hocis. Lahk mi sam napises kak ti je bil tt adventni koledar… Zelim ti vesel bozic in lepe praznike (pa ko se vidma dobis neki maliga)🎄🎅🫶🏻."
+      24: "Dans je pa zadnji dan. Nared kar hocis. Lahk mi samo napises kak ti je bil tt adventni koledar… Zelim ti vesel bozic in lepe praznike (pa ko se vidma dobis neki maliga)🎄🎅🫶🏻."
     };
 
     const YEAR = 2026;
@@ -670,7 +670,7 @@
       if (document.getElementById('calendar-page').style.display === 'block') {
         buildGrid();
       }
-    }, 1000); // update every second for live countdown
+    }, 1000);
 
     document.getElementById('modal').addEventListener('click', function(e) {
       if (e.target.id === 'modal') closeModal();
